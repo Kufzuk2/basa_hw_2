@@ -17,6 +17,50 @@ list* move_back (list* history, list* future, int jmp) {
     while (cur_obj ->)
 }
 */
+
+void go_back(list** history, list** future) {
+    // history -> prev_  != NULL
+    
+
+    if (!(*future)) {
+        printf(" no future \n");
+        *future = *history;
+        (*history) = (*history) -> prev_;
+        (*history) -> next_ = NULL;
+        (*future ) -> prev_ = NULL;
+    }
+    else {
+        printf(" future exists \n");
+        (*future ) -> next_ = *history;
+        (*history) = (*history) -> prev_;
+
+        (*history) -> next_ -> prev_ = *future;
+        (*history) -> next_  = NULL;  
+        (*future ) = (*future ) -> next_;
+    }
+
+    /*
+    (*history) = (*history) -> prev_;
+    printf(" back here \n");
+   
+    if (!((*future) -> next_))
+        (*future) -> next_ -> prev_ = (*future);
+    else
+        (*future) ->          prev_ = (*future);
+
+    (*history) -> next_ = NULL;
+
+   
+    (*future) = (*future) -> next_;    
+*/
+
+
+}
+
+
+
+
+
 void history() {
     
     list* history = (list*) malloc(sizeof(list)); 
@@ -50,15 +94,19 @@ void history() {
             history = add(history, str2); 
         }
         else if (!strcmp(str1, back_str)) {
-            printf(" back here \n");
+            //printf(" back here \n");
             jmp = strtoll(str2, NULL, 0);
-            printf(" back here \n");
+            //printf(" back here \n");
 
             for (int i = 0; i < jmp; i++) {
                 if (history -> prev_ == NULL)
                     break;
-                    printf(" back here 1\n");
+                printf(" back here 1\n");
 
+                go_back(&history, &future);
+
+                printf ("data = %s \n", history -> data_);
+/*
                 if (!future)
                     future = history;
                 else
@@ -66,7 +114,7 @@ void history() {
 
                 history = history -> prev_;
                 printf(" back here \n");
-                if (!future)
+                if (!(future -> next_))
                     future -> next_ -> prev_ = future;
                 else
                     future          -> prev_ = future;
@@ -74,7 +122,7 @@ void history() {
                 history -> next_ = NULL;
 
                 if (!future)
-                    future = future -> next_;    
+                    future = future -> next_;    */
                 
             }
         }
@@ -85,6 +133,7 @@ void history() {
             for (int i = 0; i < jmp; i++) {
                 if (future -> prev_ == NULL)
                     break;
+
                 history  -> next_ = future;
                 future = future -> prev_;
 
