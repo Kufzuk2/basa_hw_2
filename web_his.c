@@ -26,6 +26,26 @@ void go_back(list** history, list** future) {
 }
 
 
+void go_forward(list** history, list** future) {
+
+    if (!(*future) -> prev_) {
+        (*history) -> next_  =  *future;
+        (*future ) -> prev_  =  *history;
+        (*history) = *future;
+        *future = NULL;
+        return;
+    }
+
+
+    (*history) ->   next_           =   *future;
+    (*future ) =  (*future )       ->     prev_;
+    (*future ) ->   next_ -> prev_  =  *history;
+    (*history) =  (*future )       ->     next_;
+    (*future ) ->   next_           =      NULL;
+
+}
+
+
 
 
 
@@ -75,16 +95,9 @@ void history() {
             jmp = strtoll(str2, NULL, 0);
             
             for (int i = 0; i < jmp; i++) {
-                if (future -> prev_ == NULL)
+                if (future == NULL)
                     break;
-
-                history  -> next_ = future;
-                future = future -> prev_;
-
-                history -> next_ -> prev_ = history;
-                future -> next_ = NULL;
-
-                history = history -> next_;
+                go_forward(&history, &future);
             }
         }
 
@@ -93,4 +106,9 @@ void history() {
 
         input_v = scanf("%s %s", str1, str2);
     }
+    // need mem clean
+
+    kill_list(history);
+    kill_list(future );
+
 }
