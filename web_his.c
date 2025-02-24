@@ -1,21 +1,16 @@
 #include "list.h"
 #include <string.h>
-
+#include "web_his.h"
 
 
 void go_back(list** history, list** future) {
-    // history -> prev_  != NULL
-    
-
     if (!(*future)) {
-        printf(" no future \n");
         *future = *history;
         (*history) = (*history) -> prev_;
         (*history) -> next_ = NULL;
         (*future ) -> prev_ = NULL;
     }
     else {
-        printf(" future exists \n");
         (*future ) -> next_ = *history;
         (*history) = (*history) -> prev_;
 
@@ -82,7 +77,6 @@ void history() {
         }
         else if (!strcmp(str1, back_str)) {
             jmp = strtoll(str2, NULL, 0);
-            printf(" jmp = %d \n", jmp);
 
             for (int i = 0; i < jmp; i++) {
                 if (history -> prev_ == NULL)
@@ -100,8 +94,14 @@ void history() {
                 go_forward(&history, &future);
             }
         }
+        else{
+            printf("<%s> is an unknown command, try again \n", str1);
+            input_v = scanf("%s %s", str1, str2);
+            continue;
+        }
 
         printf("%s \n", history -> data_);
+        printf("\n");
         
 
         input_v = scanf("%s %s", str1, str2);
