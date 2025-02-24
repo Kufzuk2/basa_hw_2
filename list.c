@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h  >
 
 
 list* add(list* cur_node, char* data) {
@@ -14,7 +15,7 @@ list* add(list* cur_node, char* data) {
 
     
     new_node -> next_ = NULL; // probably already null after calloc???
-    new_node -> data_ = data;
+    new_node->data_ = strdup(data);
 
     if (!cur_node) 
         new_node -> prev_ = NULL;
