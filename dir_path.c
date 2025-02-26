@@ -17,7 +17,7 @@ int main(){
     printf("%s \n", output_path);
 }
 
-
+/*
 void get_path(char* input_path, char* output_path){
 
     char* div = "/";
@@ -45,25 +45,87 @@ void get_path(char* input_path, char* output_path){
                 return "/";
             }
         } else {
-            // Валидное имя директории или файла
-            append(list, dir);
+            add(list, dir);
         }
         dir = strtok(NULL, delimiter);
+    }
+}
 
+*/
+
+
+
+void add_dir(list** path, char* dir) {
+    if (!dir || strlen(dir) == 0) 
+        return;
+
+    *path = add(*path, strdup(dir));
+}
+
+
+void pop_dir(list** path) {   // kill list 
+    if (*path == NULL) 
+        return;
+
+    list* tmp = *path;
+    *path = (*path)->prev_;
+    free(tmp->data_);
+    free(tmp);
 }
 
 
 
 
+char* get_path(char* init_path) {
+    list* path = NULL;
+
+    char* path_copy = strdup(init_path);
+    char* token     = strtok(path_copy, "/");
+
+    while (token != NULL) {
+        if (!strcmp(token, ".")) {}
+
+        else if (!strcmp(token, "..")) {
+            if (path == NULL) {
+                printf("Going upper than the root directory is not possible.\n");
+
+                free(path_copy);
+                kill_list(path);
+
+                return "/";
+            }
+            
+            pop_dir(&path);
+        } 
+        else {
+            add_dir(&path, token);
+        }
+
+        token = strtok(NULL, "/");
+    }
 
 
+    char  path[PATH_MAX];
+    out_path[0]   = '\0'; 
 
+    list* current = path;
 
+    while (current) {
+        if (strlen(out_path) > 0) {
+            strcat(out_path, "/");
+        }
+        strcat(out_path, current->data_);
+        current = current->prev_;
+    }
 
+    if (strlen(out_path) == 0) {
+        strcpy(out_path, "/");
+    }
 
+    free(path_copy);
+    kill_list(path);
 
-
-
-
+    return strdup(out_path);
+}
 
 
