@@ -12,6 +12,15 @@ int check_if_sorted(int* arr, int size) {
 }
 
 
+void print_arr(int* arr, int size) {
+    for(int i = 0; i < size; i++) 
+        printf("%d ", arr[i]);
+    printf("\n");
+    printf("\n");
+}
+
+
+
 int* sort2(int* arr, int size){
     if (!arr){
         printf("empty arr \n");
@@ -25,7 +34,7 @@ int* sort2(int* arr, int size){
     int cur_size = size;
     int tmp_int  = 0;
 
-    while (cur_end != arr[0]) { //???
+    while (cur_size) { //???
 
         for (int i = 0; i < cur_size - 1; i++) {
             if (arr[i] > arr[i + 1]){
@@ -42,29 +51,64 @@ int* sort2(int* arr, int size){
 
 }
 
+int* sort2_sh(int* arr, int size){
+    if (!arr){
+        printf("empty arr \n");
+        return NULL;
+    }
+
+    if (check_if_sorted(arr, size)) {
+        printf("already sorted arr \n");
+        return arr;
+    }
+
+    int cur_size   =  size;
+    int tmp_int    =  0;
+
+    while (cur_size) { //???
+
+        for (int i = 0; i < cur_size - 1; i++) {
+            if (arr[i] > arr[i + 1]){
+
+                tmp_int    = arr[i + 1];
+                arr[i + 1] = arr[i    ];
+                arr[i    ] =    tmp_int;
+            }    
+        }
+        
+        if (cur_size < 3)
+            return arr; // not sure
+
+        cur_size--;
+
+        for (int j = cur_size - 2; j > 0; j--) {
+            if (arr[j - 1] > arr[j]){
+                tmp_int    = arr[j - 1];
+                arr[j - 1] = arr[j    ];
+                arr[j    ] =    tmp_int;
+
+            }
+        }
+    }
+    return arr;
+
+}
 
 void make_test(int arr_size) {
     int size = arr_size;
     int arr[size];
-//    srand(time(NULL));
     
 
     for(int i = 0; i < 8; i++) 
         arr[i] = rand() % 1000;
 
     printf("initial \n");
-        for(int i = 0; i < size; i++) 
-        printf("%d ", arr[i]);
-    printf("\n");
+    print_arr(arr, size);
 
-    sort2(arr, size);
+    sort2_sh (arr, size);
 
     printf("sorted \n");
-    for(int i = 0; i < size; i++) 
-        printf("%d ", arr[i]);
-    printf("\n");
-    printf("\n");
-
+    print_arr(arr, size);
 }
 
 int main() {
@@ -73,7 +117,7 @@ int main() {
     int test_num = 10;
 
     for (int i = 0; i < test_num; i++) {
-        size = rand() % 10;
+        size = rand() % 20;
         make_test(size);
     }
 
