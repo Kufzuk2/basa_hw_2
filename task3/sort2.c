@@ -94,6 +94,40 @@ int* sort2_sh(int* arr, int size){
 
 }
 
+int* comb_sort (int* arr, int size) {
+    if (!arr){
+        printf("empty arr \n");
+        return NULL;
+    }
+
+    if (check_if_sorted(arr, size)) {
+        printf("already sorted arr \n");
+        return arr;
+    }
+
+    int tmp_int    =   0;
+    int gap = size / 1.3;
+    
+    while (gap > 1) {
+        int i = 0;
+        while(i + gap < size) {
+            if (arr[i] > arr[i + gap]){
+
+                tmp_int      = arr[i + gap];
+                arr[i + gap] = arr[i      ];
+                arr[i      ] =      tmp_int;
+            }    
+            i += gap;
+        }
+        //printf("i = %d, gap = %d \n", i, gap);
+        gap = gap / 1.3;
+        //printf("i = %d, gap = %d \n", i, gap);
+    }
+
+    return sort2_sh(arr, size);
+}
+
+
 void make_test(int arr_size) {
     int size = arr_size;
     int arr[size];
@@ -105,10 +139,21 @@ void make_test(int arr_size) {
     printf("initial \n");
     print_arr(arr, size);
 
-    sort2_sh (arr, size);
+    //sort2    (arr, size);
+    //sort2_sh (arr, size);
+    comb_sort  (arr, size);
 
     printf("sorted \n");
     print_arr(arr, size);
+
+    if (check_if_sorted(arr, size)) {
+        printf("!TEST PASSED! \n");
+    }
+    else
+        printf("!*!*!*!*TEST FAILED!*!*!*!*\n");
+
+    printf("\n");
+    printf("\n");   
 }
 
 int main() {
