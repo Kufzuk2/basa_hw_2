@@ -4,11 +4,6 @@
 
 
 
-enum sort_opt {
-    sort_2    = 1,
-    sort_2_sh = 2,
-    sort_comb = 3
-};
 
 
 
@@ -28,6 +23,19 @@ void print_arr(int* arr, int size) {
     printf("\n");
     printf("\n");
 }
+
+
+int* cp_arr(int* arr, int* new_arr, int size) {
+    if (!arr)
+        return NULL;
+    
+    for(int i = 0; i < size; i++) 
+        new_arr[i] = arr[i];
+
+    return new_arr;
+}
+
+
 
 
 
@@ -150,10 +158,92 @@ int* comb_sort (int* arr, int size) {
 }
 
 
+
+
+void print_time_deps(int* arr, int size, double unsort_deg) {
+
+    clock_t start, end;
+
+    double used_time1;
+    double used_time2;
+    double used_time3;
+
+    int* arr2 = (int*) malloc(sizeof(int) * size);
+    int* arr3 = (int*) malloc(sizeof(int) * size);
+
+
+    start = clock();
+    sort2(arr, size);
+    end   = clock();
+    used_time1 = ((double)(end - start)) / CLOCKS_PER_SEC; 
+
+    start = clock();
+    sort2_sh(arr2, size);
+    end   = clock();
+    used_time2 = ((double)(end - start)) / CLOCKS_PER_SEC; 
+
+    start = clock();
+    comb_sort(arr3, size);
+    end   = clock();
+    used_time3 = ((double)(end - start)) / CLOCKS_PER_SEC; 
+
+    printf("size = %d, unsort_deg = %f, sort2 time = %f, shaker sort time = %f, comb_sort time = %f \n", 
+            size, unsort_deg, used_time1, used_time2, used_time3);
+
+    free(arr2);
+    free(arr3);
+}
+
+
+void gen_unsorted(int* arr, int size, double deg) {
+    for(int i = 0; i < size; i++) 
+        arr[i] = rand() % 100000;
+    sort2_sh(arr, size);
+    // now arr is sorted
+
+    int swap_num   =                         deg * size ;
+    int* arr_copy  =   (int*) malloc(sizeof(int) * size);
+
+    arr_copy       =         cp_arr(arr, arr_copy, size);
+
+    //printf("initial sorted, swap_num = %d \n", swap_num);
+
+    //print_arr(arr, size);
+
+
+    int cell_1 = rand() % size;
+    int cell_2 = rand() % size;
+    //printf("c1 = %d, c2 = %d \n", cell_1, cell_2);
+
+    int tmp    = 0;
+
+    for(int j = 0; j < swap_num; j += 2){
+        cell_1 = rand() % size;
+        cell_2 = rand() % size;
+
+        if (((arr[cell_1] != arr_copy[cell_1]) || (arr[cell_2] != arr_copy[cell_2]))) {
+            j -= 2;
+            continue;
+        }
+
+        tmp         = arr[cell_1];
+        arr[cell_1] = arr[cell_2];
+        arr[cell_2] =         tmp;
+
+        
+
+    } 
+    //print_arr(arr, size);
+
+    free(arr_copy);
+}
+
+
+
 void make_test(int arr_size, int sort_type) {
     int size = arr_size;
     int arr[size];
-    
+
 
     for(int i = 0; i < arr_size; i++) 
         arr[i] = rand() % 1000;
@@ -194,17 +284,6 @@ void make_test(int arr_size, int sort_type) {
     printf("\n");   
 }
 
-int* cp_arr(int* arr, int* new_arr, int size) {
-    if (!arr)
-        return NULL;
-    
-    for(int i = 0; i < size; i++) 
-        new_arr[i] = arr[i];
-
-    return new_arr;
-}
-
-
 void time_cmp_test () {
     int size     =      10;
     int max_size = 1000000;
@@ -215,7 +294,7 @@ void time_cmp_test () {
         for(int i = 0; i < size; i++) 
             arr[i] = rand() % 100000;
 
-        print_time_deps(arr, size, 1);
+        print_time_deps(arr, size, 1.0);
         size *= 10;
     }
 
@@ -224,63 +303,6 @@ void time_cmp_test () {
 }
 
 
-void print_time_deps(int arr, int size, double unsort_deg) {
-
-    clock_t start, end;
-
-    double used_time1;
-    double used_time2;
-    double used_time3;
-
-    int* arr2 = (int*) malloc(sizeof(int) * size);
-    int* arr3 = (int*) malloc(sizeof(int) * size);
-
-
-    start = clock();
-    sort2(arr, size);
-    end   = clock();
-    used_time1 = ((double)(end - start)) / CLOCKS_PER_SEC; 
-
-    start = clock();
-    sort2_sh(arr2, size);
-    end   = clock();
-    used_time2 = ((double)(end - start)) / CLOCKS_PER_SEC; 
-
-    start = clock();
-    comb_sort(arr3, size);
-    end   = clock();
-    used_time3 = ((double)(end - start)) / CLOCKS_PER_SEC; 
-
-    printf("size = %d, unsort_deg = %f, sort2 time = %f, shaker sort time = %f, comb_sort time = %f \n", 
-            size, unsort_deg, used_time1, used_time2, used_time3);
-
-    free(arr2);
-    free(arr3);
-}
-
-
-void gen_unsorted(int* arr, int size, double deg) {
-    for(int i = 0; i < size; i++) 
-        arr[i] = rand() % 1000;
-    sort2_sh(arr, size);
-    // now arr is sorted
-
-    int swap_num = size * deg;
-    
-    int cell_1 = 0;
-    int cell_2 = 0;
-    int tmp    = 0;
-
-    for(int j = 0; j < size; j += 2){
-        cell_1 = rand() % size;
-        cell_2 = rand() % size;
-
-        tmp         = arr[cell_1];
-        arr[cell_1] = arr[cell_2];
-        arr[cell_2] =         tmp;
-    } 
-}
-
 
 void test_sorted_degree(int size) {
     int* arr = (int*) malloc(sizeof(int) * size);
@@ -288,30 +310,13 @@ void test_sorted_degree(int size) {
     double  deg =   0.1;
 
     for (int i = 0; i < 9; i++) {
+        deg = 0.1 * (i + 1);
         gen_unsorted   (arr, size, deg);
         print_time_deps(arr, size, deg);
-
-        deg += i / 10;
+        
+        
     }
 
     free(arr);
 }
 
-int main() {
-    srand(time(NULL));
-/*
-    int test_num = 5;
-    //int size = rand() % 10;
-    int size = 122;
-
-    for (int i = 0; i < test_num; i++) {
-        make_test(size, sort_2);
-    }
-*/
-
-    time_cmp_test();
-
- /*  for (int i = 0; i < test_num; i++) {
-    make_test(size, 2);
-}*/
-}
