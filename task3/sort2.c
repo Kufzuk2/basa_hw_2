@@ -74,7 +74,7 @@ int* sort2_sh(int* arr, int size){
     }
 
     if (check_if_sorted(arr, size)) {
-        printf("already sorted arr \n");
+        //printf("already sorted arr \n");
         return arr;
     }
 
@@ -130,10 +130,9 @@ int* comb_sort (int* arr, int size) {
         return NULL;
     }
 
-    if (check_if_sorted(arr, size)) {
-        printf("already sorted arr \n");
+    if (check_if_sorted(arr, size)) 
         return arr;
-    }
+
 
     int tmp_int    =   0;
     int gap = size / 1.3;
@@ -160,7 +159,7 @@ int* comb_sort (int* arr, int size) {
 
 
 
-void print_time_deps(int* arr, int size, double unsort_deg) {
+void print_time_deps(int* arr, int size, double unsort_deg, FILE* output_file) {
 
     clock_t start, end;
 
@@ -190,6 +189,10 @@ void print_time_deps(int* arr, int size, double unsort_deg) {
     printf("size = %d, unsort_deg = %f, sort2 time = %f, shaker sort time = %f, comb_sort time = %f \n", 
             size, unsort_deg, used_time1, used_time2, used_time3);
 
+    fprintf(output_file, "%d %f %f %f %f\n", size, unsort_deg * 100, used_time1, used_time2, used_time3);
+
+
+
     free(arr2);
     free(arr3);
 }
@@ -201,7 +204,7 @@ void gen_unsorted(int* arr, int size, double deg) {
     sort2_sh(arr, size);
     // now arr is sorted
 
-    int swap_num   =                         deg * size ;
+    int  swap_num  =                         deg * size ;
     int* arr_copy  =   (int*) malloc(sizeof(int) * size);
 
     arr_copy       =         cp_arr(arr, arr_copy, size);
@@ -284,9 +287,9 @@ void make_test(int arr_size, int sort_type) {
     printf("\n");   
 }
 
-void time_cmp_test () {
-    int size     =      10;
-    int max_size = 1000000;
+void time_cmp_test (FILE* output_file) {
+    int size     =     10;
+    int max_size = 100000;
 
     int* arr = (int*) malloc(sizeof(int) * max_size);
 
@@ -294,7 +297,7 @@ void time_cmp_test () {
         for(int i = 0; i < size; i++) 
             arr[i] = rand() % 100000;
 
-        print_time_deps(arr, size, 1.0);
+        print_time_deps(arr, size, 1.0, output_file);
         size *= 10;
     }
 
@@ -304,7 +307,7 @@ void time_cmp_test () {
 
 
 
-void test_sorted_degree(int size) {
+void test_sorted_degree(int size, FILE* output_file) {
     int* arr = (int*) malloc(sizeof(int) * size);
 
     double  deg =   0.1;
@@ -312,7 +315,7 @@ void test_sorted_degree(int size) {
     for (int i = 0; i < 9; i++) {
         deg = 0.1 * (i + 1);
         gen_unsorted   (arr, size, deg);
-        print_time_deps(arr, size, deg);
+        print_time_deps(arr, size, deg, output_file);
         
         
     }
