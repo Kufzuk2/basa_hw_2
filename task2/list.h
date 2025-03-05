@@ -15,12 +15,10 @@ typedef struct list{
 
 list*       add (list* cur_node, char* data);
 
-list*  pop_teil (list* cur_node);
+void  pop_teil (list* head);
 
 list* find_head (list* cur_node);
 
 int    if_empty (list* node);
 
 void print_node (list* node);   
-
-void  kill_list (list* cur_node);

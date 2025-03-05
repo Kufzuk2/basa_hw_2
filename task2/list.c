@@ -29,28 +29,20 @@ list* add(list* cur_node, char* data) {
 
 
 
-list*  pop_teil (list* cur_node) {
+void pop_teil (list* head) {
+    list* temp;  
+    while (head) {
+        temp = head;
+        head = head->next_; 
 
-    if (!cur_node)
-        return NULL;
 
-    list* prev = cur_node -> prev_;
-    if ((cur_node -> next_) == NULL) {
+        if (temp->data_) {
+            free(temp->data_);
+        }
 
-        cur_node      -> data_ = NULL;
-        cur_node      -> prev_ = NULL;
-
-        free(cur_node -> data_)      ;
-//        free(cur_node -> prev_)      ;
-
-        return prev;
+        free(temp);
     }
-
-    pop_teil(cur_node -> next_);
-
-    return prev;
 }
-
 
 
 int if_empty (list* node) {
@@ -78,11 +70,4 @@ list* find_head (list* cur_node) {
 }
 
 
-void kill_list(list* cur_node) {
-    list* head = find_head(cur_node);
-    
-    if (pop_teil(head))
-        printf("problems wirh list destruction \n");
-    
-}
 

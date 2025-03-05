@@ -59,6 +59,7 @@ void history() {
     char* forward_str =  "forward";
 
     history = add(NULL, cur_page);
+    future = NULL;
 
     int input_v = scanf("%s %s", str1, str2); 
 
@@ -79,9 +80,9 @@ void history() {
             jmp = strtoll(str2, NULL, 0);
 
             for (int i = 0; i < jmp; i++) {
-                if (history -> prev_ == NULL)
+                if (history -> prev_ == NULL) 
                     break;
-
+                
                 go_back(&history, &future);
             }
         }
@@ -108,7 +109,7 @@ void history() {
     }
     // need mem clean
 
-    kill_list(history);
-    kill_list(future );
+    pop_teil(history);
+    pop_teil(future );
 
 }

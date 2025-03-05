@@ -1,4 +1,5 @@
 #include "list.h"
+#include "web_his.h"
 
 int main ()
 {
