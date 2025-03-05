@@ -94,13 +94,6 @@ int* sort2_sh(int* arr, int size){
             }    
         }
         
-    //    cur_size--;
-        //printf("cur_size = %d \n", cur_size);
-      //  print_arr(arr, size);
-  /*      if (cur_size < 2)
-            return arr; // not sure
-*/
-
         for (int j = size - iter_num - 1; j > iter_num; j--) {
             if (arr[j - 1] > arr[j]){
                 tmp_int    = arr[j - 1];
@@ -109,12 +102,6 @@ int* sort2_sh(int* arr, int size){
 
             }
         }
-    //    cur_size--;
-        //printf("cur_size = %d \n", cur_size);
-        //print_arr(arr, size);
-  /*      if (cur_size < 2)
-            return arr; // not sure
-*/
         iter_num++;
 
         if (iter_num * 2 >= size)
@@ -125,37 +112,33 @@ int* sort2_sh(int* arr, int size){
 }
 
 int* comb_sort (int* arr, int size) {
-    if (!arr){
-        printf("empty arr \n");
-        return NULL;
-    }
+     	int        tmp;
+        int          k;
+        int gap = size;
 
-    if (check_if_sorted(arr, size)) 
-        return arr;
+        long long cnt=0;
 
+        while(size > 1) {
+            gap /= 1.247f;
+                  
+            if (gap < 1) 
+                gap = 1; 
 
-    int tmp_int    =   0;
-    int gap = size / 1.3;
-    
-    while (gap > 1) {
-        int i = 0;
-        while(i + gap < size) {
-            if (arr[i] > arr[i + gap]){
+            k = 0;
 
-                tmp_int      = arr[i + gap];
-                arr[i + gap] = arr[i      ];
-                arr[i      ] =      tmp_int;
-            }    
-            i += gap;
+            for (int i = 0; i + gap < size; i++) { 
+                if(arr[i] > arr[i +  gap]) {
+                    tmp    = arr[i      ];
+                    arr[i] = arr[i + gap];
+                    arr[i + gap]   =  tmp; 	
+                    k = i;
+                }
+                cnt++;
+            }
+            if (gap == 1) 
+                size = k + 1; 
         }
-        //printf("i = %d, gap = %d \n", i, gap);
-        gap = gap / 1.3;
-        //printf("i = %d, gap = %d \n", i, gap);
     }
-
-    return sort2_sh(arr, size);
-}
-
 
 
 
@@ -170,21 +153,42 @@ void print_time_deps(int* arr, int size, double unsort_deg, FILE* output_file) {
     int* arr2 = (int*) malloc(sizeof(int) * size);
     int* arr3 = (int*) malloc(sizeof(int) * size);
 
+    for (int i = 0; i < size; i++){
+        arr2[i] = arr[i];
+        arr3[i] = arr[i];
+    }
+
 
     start = clock();
     sort2(arr, size);
     end   = clock();
     used_time1 = ((double)(end - start)) / CLOCKS_PER_SEC; 
 
+    if (check_if_sorted(arr, size)) {
+        printf("sort2 OK \n");
+    }
+
+
     start = clock();
     sort2_sh(arr2, size);
     end   = clock();
     used_time2 = ((double)(end - start)) / CLOCKS_PER_SEC; 
 
+    if (check_if_sorted(arr2, size)) {
+        printf("sort2_sh OK \n");
+    }
+
+
     start = clock();
     comb_sort(arr3, size);
     end   = clock();
     used_time3 = ((double)(end - start)) / CLOCKS_PER_SEC; 
+
+    if (check_if_sorted(arr3, size)) {
+        printf("comb sort OK \n");
+    }
+
+
 
     printf("size = %d, unsort_deg = %f, sort2 time = %f, shaker sort time = %f, comb_sort time = %f \n", 
             size, unsort_deg, used_time1, used_time2, used_time3);
@@ -208,17 +212,10 @@ void gen_unsorted(int* arr, int size, double deg) {
     int* arr_copy  =   (int*) malloc(sizeof(int) * size);
 
     arr_copy       =         cp_arr(arr, arr_copy, size);
-
-    //printf("initial sorted, swap_num = %d \n", swap_num);
-
-    //print_arr(arr, size);
-
-
     int cell_1 = rand() % size;
     int cell_2 = rand() % size;
-    //printf("c1 = %d, c2 = %d \n", cell_1, cell_2);
 
-    int tmp    = 0;
+    int tmp = 0;
 
     for(int j = 0; j < swap_num; j += 2){
         cell_1 = rand() % size;
@@ -236,8 +233,6 @@ void gen_unsorted(int* arr, int size, double deg) {
         
 
     } 
-    //print_arr(arr, size);
-
     free(arr_copy);
 }
 
@@ -245,14 +240,14 @@ void gen_unsorted(int* arr, int size, double deg) {
 
 void make_test(int arr_size, int sort_type) {
     int size = arr_size;
-    int arr[size];
+    int* arr = (int*) malloc(sizeof(int) * arr_size);
 
 
     for(int i = 0; i < arr_size; i++) 
         arr[i] = rand() % 1000;
 
-    printf("initial \n");
-    print_arr(arr, size);
+  //  printf("initial \n");
+//    print_arr(arr, size);
 
     clock_t start, end;
     double used_time;
@@ -273,8 +268,8 @@ void make_test(int arr_size, int sort_type) {
 
     used_time = ((double)(end - start)) / CLOCKS_PER_SEC; 
     
-    printf("sorted \n");
-    print_arr(arr, size);
+    //printf("sorted \n");
+    //print_arr(arr, size);
     printf("Time taken: %f seconds\n", used_time);
 
     if (check_if_sorted(arr, size)) {
@@ -285,6 +280,7 @@ void make_test(int arr_size, int sort_type) {
 
     printf("\n");
     printf("\n");   
+    free(arr);
 }
 
 void time_cmp_test (FILE* output_file) {

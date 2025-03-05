@@ -39,16 +39,16 @@ def plot_graph_deg(unsort_deg, time1, time2, time3):
 def plot_graph_size(size, time1, time2, time3):
     plt.figure(figsize=(10, 6))
 
-    plt.plot(size, time1, label="Sort2", marker='o')
-    plt.plot(size, time2, label="Shaker Sort", marker='s')
-    plt.plot(size, time3, label="Comb Sort", marker='^')
+    plt.plot(np.log10(size), np.log10(time1) + 6, label="Sort2",       marker='o')
+    plt.plot(np.log10(size), np.log10(time2) + 6, label="Shaker Sort", marker='s')
+    plt.plot(np.log10(size), np.log10(time3) + 6, label="Comb Sort",   marker='^')
 
     plt.title("Time Dependency on Array Size (Log Scale)")
     plt.xlabel("Array Size")
     plt.ylabel("Time (seconds)")
     
     # Установка логарифмического масштаба по оси X
-    plt.xscale("log")
+#    plt.xscale("log")
     
     # Добавление сетки для логарифмического масштаба
     plt.grid(which="both", linestyle='--', linewidth=0.5)
