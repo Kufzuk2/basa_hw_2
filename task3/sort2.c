@@ -113,31 +113,32 @@ int* sort2_sh(int* arr, int size){
 
 int* comb_sort (int* arr, int size) {
      	int        tmp;
-        int          k;
+        int       last;
         int gap = size;
 
-        long long cnt=0;
 
-        while(size > 1) {
+        while (size > 1) {
             gap /= 1.247f;
                   
             if (gap < 1) 
                 gap = 1; 
 
-            k = 0;
+            last = 0;
 
             for (int i = 0; i + gap < size; i++) { 
-                if(arr[i] > arr[i +  gap]) {
+                if (arr[i] > arr[i + gap]) {
                     tmp    = arr[i      ];
                     arr[i] = arr[i + gap];
+
                     arr[i + gap]   =  tmp; 	
-                    k = i;
+                    last = i;
                 }
-                cnt++;
             }
+
             if (gap == 1) 
-                size = k + 1; 
+                size = last + 1; 
         }
+        return arr;
     }
 
 

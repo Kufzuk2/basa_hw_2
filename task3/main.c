@@ -6,8 +6,8 @@
 int main() {
     srand(time(NULL));
 
-    for (int i = 0; i < 20; i++)
-        make_test(1000, 3);
+    for (int i = 0; i < 2; i++)
+        make_test(20, 3);
     
     FILE* output_file1 = fopen("time_deg.txt", "w");
     if (!output_file1) {
