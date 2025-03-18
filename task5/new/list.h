@@ -3,17 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "graph.h"
 
-
-
-
-
-
-
-
-
-
+struct node_t;
 
 typedef struct list{
 
@@ -24,7 +15,7 @@ typedef struct list{
 } list;
 
 
-list*       add (list* cur_node, node_t* node);
+list*   add (list* cur_node, node_t* node);
 
 void  pop_teil (list* head);
 
