@@ -142,6 +142,74 @@ int* comb_sort (int* arr, int size) {
     }
 
 
+#define MAX_SIZE 1000000
+
+int get_digit(int num, int exp) 
+{
+    return (num / exp) % 10;
+}
+
+int find_max_digits(list* head) 
+    {
+    int max = 0;
+    list* curr = head;
+    while (curr) {
+        int len = strlen(curr->data_);
+        if (len > max) max = len;
+        curr = curr->next_;
+    }
+    return max;
+}
+
+void radix_sort(int* arr, int n) 
+{
+    if (n <= 1) return;
+    
+    int max_num = arr[0];
+
+    for (int i = 1; i < n; i++) 
+    {
+        if (arr[i] > max_num) 
+            max_num = arr[i];
+    }
+    
+    int  exp    = 1;
+    int* output = malloc(n  * sizeof(int));
+    int* count  = malloc(10 * sizeof(int));
+    
+    while (max_num / exp > 0) 
+    {
+        memset(count, 0, 10 * sizeof(int));
+        
+        for (int i = 0; i < n; i++) 
+            count[get_digit(arr[i], exp)]++;
+        
+        for (int i = 1; i < 10; i++)
+            count[i] += count[i - 1];
+        
+        
+        for (int i = n - 1; i >= 0; i--) 
+        {
+            int digit = get_digit(arr[i], exp);
+
+            output[count[digit] - 1] = arr[i];
+            count[digit]--;
+        }
+        
+        memcpy(arr, output, n * sizeof(int));
+        exp *= 10;
+    }
+    
+    free(output);
+    free(count);
+}
+
+void generate_array(int* arr, int n, int max_val) 
+{
+    for (int i = 0; i < n; i++)
+        arr[i] = rand() % max_val;
+}
+
 
 void print_time_deps(int* arr, int size, double unsort_deg, FILE* output_file) {
 
@@ -317,6 +385,44 @@ void test_sorted_degree(int size, FILE* output_file) {
         
     }
 
+    free(arr);
+}
+
+
+void test_radix() 
+{
+    int sizes[]   = {10, 100, 1000, 10000, 100000, 1000000};
+    int num_tests =  sizeof(sizes)/sizeof(sizes[0]);
+
+    int* arr = malloc(1000000 * sizeof(int));
+    
+    for (int i = 0; i < num_tests; i++) {
+        int n = sizes[i];
+        generate_array(arr, n, 1000000);
+        
+        // Test Radix Sort
+        int* radix_arr = malloc(n * sizeof(int));
+        copy_array(radix_arr, arr, n);
+        
+        clock_t start = clock();
+        radix_sort(radix_arr, n);
+        clock_t end = clock();
+        double radix_time = (double)(end - start)/CLOCKS_PER_SEC;
+        free(radix_arr);
+        
+        // Test std::sort
+        int* std_arr = malloc(n * sizeof(int));
+        copy_array(std_arr, arr, n);
+        
+        start = clock();
+        std_sort(std_arr, n);
+        end = clock();
+        double std_time = (double)(end - start)/CLOCKS_PER_SEC;
+        free(std_arr);
+        
+        printf("%d\t%.6f\t%.6f\n", n, radix_time, std_time);
+    }
+    
     free(arr);
 }
 
